@@ -1,0 +1,21 @@
+# Test configuration: in-memory H2 in PostgreSQL mode, schema created by JPA.
+spring:
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:h2:mem:ps27test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+logging:
+  level:
+    com.ps27.railway: WARN

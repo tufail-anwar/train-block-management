@@ -1,0 +1,26 @@
+# PostgreSQL / Supabase profile.
+# Credentials MUST come from environment variables - never hard-code secrets.
+# Reference: backend/.env.example (placeholders only).
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX_SIZE:10}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    properties:
+      hibernate:
+        format_sql: false
+    open-in-view: false
+
+# Conflict detection tuning (Part 4). Overridable via environment variables.
+conflict:
+  min-gap-days: ${CONFLICT_MIN_GAP_DAYS:1}
+  max-daily-work-minutes: ${CONFLICT_MAX_DAILY_WORK_MINUTES:720}
+
+logging:
+  level:
+    com.ps27.railway: INFO

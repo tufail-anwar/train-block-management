@@ -1,0 +1,37 @@
+# Default profile: in-memory H2 database in PostgreSQL compatibility mode.
+# No credentials required. Synthetic sample data is seeded on startup.
+spring:
+  application:
+    name: ps27-railway-block-optimizer
+  datasource:
+    url: jdbc:h2:mem:ps27;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: 8080
+
+# Conflict detection tuning (Part 4). Overridable via environment variables.
+conflict:
+  # Minimum free days between consecutive blocks on the same corridor.
+  min-gap-days: ${CONFLICT_MIN_GAP_DAYS:1}
+  # Maximum allowed work per single-day block in minutes.
+  max-daily-work-minutes: ${CONFLICT_MAX_DAILY_WORK_MINUTES:720}
+
+logging:
+  level:
+    com.ps27.railway: INFO

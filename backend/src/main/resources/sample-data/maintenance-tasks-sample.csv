@@ -1,0 +1,11 @@
+taskCode,title,description,taskType,priority,durationMinutes,corridorCode,departmentCode,requestedStart,requestedEnd,earliestStart,latestEnd,status
+IMP-2026-001,Annual bridge inspection BR-17,Inspect bridge superstructure and bearings,INSPECTION,MEDIUM,240,COR-001,DEPT-TRK,2026-10-05,2026-10-07,2026-10-01,2026-10-15,REQUESTED
+TRK-2026-002,Track geometry correction km 45-48,Correct track alignment defects,TRACK_RELAY,HIGH,480,COR-001,DEPT-TRK,2026-10-12,2026-10-14,2026-10-10,2026-10-20,REQUESTED
+SIG-2026-003,Signal head replacement S-102,Replace defective signal head at km 32,SIGNAL_UPGRADE,CRITICAL,180,COR-002,DEPT-SIG,2026-10-08,2026-10-08,2026-10-05,2026-10-12,REQUESTED
+OHE-2026-004,Overhead equipment patrol section 2,Patrol and tighten OHE fittings,INSPECTION,MEDIUM,360,COR-002,DEPT-OHE,2026-10-09,2026-10-10,2026-10-07,2026-10-15,REQUESTED
+TRK-2026-005,Rail grinding km 60-65,Rail profile grinding to remove surface defects,PREVENTIVE_MAINTENANCE,HIGH,420,COR-001,DEPT-TRK,2026-10-19,2026-10-21,2026-10-15,2026-10-30,REQUESTED
+BRG-2026-006,Expansion joint replacement BR-09,Replace failed expansion joint,CORRECTIVE_MAINTENANCE,CRITICAL,300,COR-003,DEPT-ENG,2026-10-11,2026-10-13,2026-10-08,2026-10-20,REQUESTED
+SIG-2026-007,Level crossing warning upgrade LC-4,Upgrade warning system at level crossing,REPLACEMENT,MEDIUM,240,COR-003,DEPT-SIG,2026-10-14,2026-10-15,2026-10-10,2026-10-25,REQUESTED
+TRK-2026-008,Sleeper replacement km 80-82,Replace defective sleepers,REPLACEMENT,HIGH,540,COR-001,DEPT-TRK,2026-10-22,2026-10-24,2026-10-18,2026-11-05,REQUESTED
+OHE-2026-009,Catenary mast foundation repair M-88,Repair foundation of catenary mast,CORRECTIVE_MAINTENANCE,HIGH,360,COR-002,DEPT-OHE,2026-10-16,2026-10-17,2026-10-12,2026-10-25,REQUESTED
+IMP-2026-010,Tunnel lining inspection T-3,Visual inspection of tunnel lining,INSPECTION,LOW,480,COR-003,DEPT-ENG,2026-10-26,2026-10-28,2026-10-20,2026-11-10,REQUESTED
