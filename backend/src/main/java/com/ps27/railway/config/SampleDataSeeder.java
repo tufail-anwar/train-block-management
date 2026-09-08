@@ -207,6 +207,25 @@ public class SampleDataSeeder implements CommandLineRunner {
         saveBlockRequest("BLK-2026-007", longTask, cor2, start.plusDays(7), start.plusDays(7),
                 BlockRequestStatus.REQUESTED, "Duration exceeds daily limit");
 
+        // --- Part 5 (optimization) synthetic scenarios --------------------
+        // REQUESTED tasks WITHOUT blocks so the optimizer has schedulable work.
+        // These deliberately avoid the Part 2 conflict fixtures above.
+        saveTask("TRK-2026-007", "Track ballast cleaning km 50-52",
+                "Clean and top up ballast on section km 50-52", TaskType.PREVENTIVE_MAINTENANCE,
+                Priority.HIGH, 540, cor1, assetByCode("AST-001"), track,
+                start.plusDays(1), start.plusDays(3), start.plusDays(1), start.plusDays(6),
+                TaskStatus.REQUESTED, "Created for optimizer (Part 5)");
+        saveTask("SIG-2026-008", "Signal interlocking test S-102",
+                "Functional test of interlocking logic at km 32", TaskType.SIGNAL_UPGRADE,
+                Priority.MEDIUM, 240, cor2, assetByCode("AST-003"), signal,
+                start.plusDays(1), start.plusDays(2), start.plusDays(1), start.plusDays(5),
+                TaskStatus.REQUESTED, "Created for optimizer (Part 5)");
+        saveTask("BRG-2026-009", "Bridge joint replacement BR-17",
+                "Replace expansion joints on bridge BR-17", TaskType.REPLACEMENT,
+                Priority.CRITICAL, 360, cor1, assetByCode("AST-002"), eng,
+                start.plusDays(2), start.plusDays(4), start.plusDays(2), start.plusDays(9),
+                TaskStatus.REQUESTED, "Created for optimizer (Part 5)");
+
         log.info("Sample data seeding complete");
     }
 

@@ -1,10 +1,11 @@
-# PS27 – Railway Maintenance Block Optimizer (Part 1 + Conflict Detection)
+# PS27 – Railway Maintenance Block Optimizer (Part 1 + Conflict Detection + Optimization)
 
 Spring Boot backend for managing railway maintenance planning data. Part 1 builds
 the data layer and CRUD APIs; the **conflict detection module** (Part 4 docs)
-adds deterministic, explainable conflict checks on top of the existing data.
-Optimization, block plans, audit, security, AI/ML, Firebase and the frontend are
-still out of scope and deferred to later parts.
+adds deterministic, explainable conflict checks on top of the existing data;
+the **block optimization module** (Part 5 docs) adds a deterministic, explainable
+optimizer that generates feasible maintenance block plans from tasks, schedules,
+constraints and resources — **no AI/ML**.
 
 ## Tech stack
 
@@ -87,6 +88,68 @@ mvn test
 | GET/PUT/DELETE | `/api/users/{id}` | Read / update / delete user |
 | GET/POST | `/api/constraints` | List / create constraints |
 | GET/PUT/DELETE | `/api/constraints/{id}` | Read / update / delete constraint |
+
+## Block optimization (Part 5)
+
+Deterministic, explainable optimizer (`deterministic-greedy-v1`, no AI/ML, no
+randomness — identical input produces identical output). It ranks eligible tasks
+(`DRAFT`/`REQUESTED`/`APPROVED`) by priority weight (CRITICAL 100 > HIGH 60 >
+MEDIUM 30 > LOW 10), then duration, then task code. For each task it enumerates
+every candidate start date in the clipped allowed window with block length
+`max(1, ceil(durationMinutes / maxDailyWorkMinutes))` days and reuses
+`ConflictDetectionService.checkProposed(...)` as the feasibility oracle.
+
+| Method | Path | Description |
+|---|---|---|
+| POST | `/api/optimization/run` | Run optimization for a window; returns run + detailed per-task results (persisted) |
+| GET | `/api/optimization/runs/{id}` | Run summary (404 if missing) |
+| GET | `/api/optimization/runs/{id}/results` | Per-task result list (404 if run missing) |
+
+Request body:
+
+```json
+{
+  "windowStart": "2026-12-01",
+  "windowEnd": "2026-12-15",
+  "taskIds": [1, 2],
+  "maxConcurrentBlocks": 5,
+  "blackoutWindows": [{"from": "2026-12-05", "to": "2026-12-06"}],
+  "persistBlocks": true
+}
+```
+
+`windowStart`/`windowEnd` are required; `taskIds`, `maxConcurrentBlocks`,
+`blackoutWindows` and `persistBlocks` (default `true`) are optional. Feasible
+candidates are persisted as `BlockRequest`s (status `SCHEDULED` by default);
+runs and per-task decisions are stored in `optimization_runs` /
+`optimization_results` with JSON explainability payloads (conflicts and rejected
+candidate ranges with reasons).
+
+Hard rejects: `TRAIN_OVERLAP`, `BLOCK_OVERLAP`, `SPATIAL_OVERLAP`,
+`RESOURCE_CONFLICT`, `DURATION_FIT`, `CONSTRAINT_VIOLATION` HIGH, blackout
+overlap, exceeding the per-day concurrent-block limit. Soft flags (penalize
+only): `INSUFFICIENT_GAP`, `CONSTRAINT_VIOLATION` MEDIUM. Score = priority
+weight + `5 ×` days-early − `15 ×` soft-conflicts; tie-break earliest start,
+then candidate code.
+
+Tuning (environment-overridable):
+
+```yaml
+optimization:
+  algorithm: deterministic-greedy-v1     # OPTIMIZATION_ALGORITHM
+  max-concurrent-blocks: 5               # OPTIMIZATION_MAX_CONCURRENT_BLOCKS
+  persist-block-status: SCHEDULED        # OPTIMIZATION_PERSIST_BLOCK_STATUS
+```
+
+Smoke test after `mvn spring-boot:run`:
+
+```bash
+curl -X POST http://localhost:8080/api/optimization/run \
+  -H 'Content-Type: application/json' \
+  -d '{"windowStart":"2026-12-01","windowEnd":"2026-12-15"}'
+curl http://localhost:8080/api/optimization/runs/1
+curl http://localhost:8080/api/optimization/runs/1/results
+```
 
 ## Conflict detection (Part 4)
 

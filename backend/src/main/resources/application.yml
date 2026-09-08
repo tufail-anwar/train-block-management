@@ -32,6 +32,15 @@ conflict:
   # Maximum allowed work per single-day block in minutes.
   max-daily-work-minutes: ${CONFLICT_MAX_DAILY_WORK_MINUTES:720}
 
+# Block optimization tuning (Part 5). Overridable via environment variables.
+optimization:
+  # Deterministic, explainable algorithm (no AI/ML).
+  algorithm: ${OPTIMIZATION_ALGORITHM:deterministic-greedy-v1}
+  # Default maximum number of blocks active on the same day.
+  max-concurrent-blocks: ${OPTIMIZATION_MAX_CONCURRENT_BLOCKS:5}
+  # Status applied to block requests persisted by the optimizer.
+  persist-block-status: ${OPTIMIZATION_PERSIST_BLOCK_STATUS:SCHEDULED}
+
 logging:
   level:
     com.ps27.railway: INFO

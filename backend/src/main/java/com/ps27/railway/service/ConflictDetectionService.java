@@ -149,6 +149,29 @@ public class ConflictDetectionService {
         return new ConflictCheckResponse(request.blockCode(), sort(evaluateSubject(candidate, existing)));
     }
 
+    /**
+     * Returns true when the task already has at least one active block
+     * (DRAFT/REQUESTED/APPROVED/SCHEDULED). Used by the optimizer to skip tasks
+     * that are already planned.
+     */
+    @Transactional(readOnly = true)
+    public boolean hasActiveBlockForTask(Long taskId) {
+        return activeBlocks(null, null, null).stream()
+                .anyMatch(b -> b.getMaintenanceTask().getId().equals(taskId));
+    }
+
+    /**
+     * Counts active blocks (DRAFT/REQUESTED/APPROVED/SCHEDULED) covering the
+     * given date, regardless of corridor. Used by the optimizer to enforce the
+     * configured maximum number of concurrent blocks per day.
+     */
+    @Transactional(readOnly = true)
+    public long countActiveBlocksOnDate(LocalDate date) {
+        return activeBlocks(null, null, null).stream()
+                .filter(b -> overlaps(b, date, date))
+                .count();
+    }
+
     // ------------------------------------------------------------------
     // Subject evaluation - produces conflicts from the perspective of one block
     // ------------------------------------------------------------------

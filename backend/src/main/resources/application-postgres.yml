@@ -21,6 +21,12 @@ conflict:
   min-gap-days: ${CONFLICT_MIN_GAP_DAYS:1}
   max-daily-work-minutes: ${CONFLICT_MAX_DAILY_WORK_MINUTES:720}
 
+# Block optimization tuning (Part 5). Overridable via environment variables.
+optimization:
+  algorithm: ${OPTIMIZATION_ALGORITHM:deterministic-greedy-v1}
+  max-concurrent-blocks: ${OPTIMIZATION_MAX_CONCURRENT_BLOCKS:5}
+  persist-block-status: ${OPTIMIZATION_PERSIST_BLOCK_STATUS:SCHEDULED}
+
 logging:
   level:
     com.ps27.railway: INFO
